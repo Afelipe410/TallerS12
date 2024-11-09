@@ -224,7 +224,6 @@ tr:hover {
     }
 }
 
-/* Animación de entrada */
 @keyframes fadeIn {
     from {
         opacity: 0;

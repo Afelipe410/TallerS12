@@ -1,12 +1,10 @@
 <template>
     <div class="clientes-view">
         <div class="content-grid">
-            <!-- Formulario -->
             <div class="form-section">
                 <ClienteForm ref="clienteForm" @cliente-added="refreshList" />
             </div>
 
-            <!-- Tabla -->
             <div class="table-section">
                 <h2>Lista de Clientes</h2>
                 <div v-if="clienteStore.loading" class="loading">
