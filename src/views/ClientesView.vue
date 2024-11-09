@@ -1,58 +1,82 @@
 <template>
     <div class="clientes-view">
-        <h2>Lista de Clientes</h2>
-        <div v-if="clienteStore.loading" class="loading">
-            Cargando...
-        </div>
-        <div v-else-if="clienteStore.error" class="error">
-            {{ clienteStore.error }}
-        </div>
-        <div v-else class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Dirección</th>
-                        <th>Teléfono</th>
-                        <th>Ciudad</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="cliente in clienteStore.clientes" :key="cliente.id">
-                        <td>{{ cliente.id }}</td>
-                        <td>{{ cliente.nombre }}</td>
-                        <td>{{ cliente.direccion }}</td>
-                        <td>{{ cliente.telefono }}</td>
-                        <td>{{ cliente.ciudad }}</td>
-                        <td>
-                            <button @click="handleDelete(cliente.id)" class="btn btn-delete">
-                                <i class="fas fa-trash"></i> Eliminar
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="content-grid">
+            <!-- Formulario -->
+            <div class="form-section">
+                <ClienteForm ref="clienteForm" @cliente-added="refreshList" />
+            </div>
+
+            <!-- Tabla -->
+            <div class="table-section">
+                <h2>Lista de Clientes</h2>
+                <div v-if="clienteStore.loading" class="loading">
+                    Cargando...
+                </div>
+                <div v-else-if="clienteStore.error" class="error">
+                    {{ clienteStore.error }}
+                </div>
+                <div v-else class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Dirección</th>
+                                <th>Teléfono</th>
+                                <th>Ciudad</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="cliente in clienteStore.clientes" :key="cliente.id">
+                                <td>{{ cliente.id }}</td>
+                                <td>{{ cliente.nombre }}</td>
+                                <td>{{ cliente.direccion }}</td>
+                                <td>{{ cliente.telefono }}</td>
+                                <td>{{ cliente.ciudad }}</td>
+                                <td class="actions">
+                                    <button @click="handleEdit(cliente)" class="btn btn-edit">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button @click="handleDelete(cliente.id)" class="btn btn-delete">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useClienteStore } from '../stores/cliente'
+import ClienteForm from '../components/cliente/ClienteForm.vue'
 
 const clienteStore = useClienteStore()
+const clienteForm = ref(null)
 
 onMounted(() => {
-    clienteStore.fetchClientes()
+    refreshList()
 })
+
+const refreshList = () => {
+    clienteStore.fetchClientes()
+}
+
+const handleEdit = (cliente) => {
+    clienteForm.value.setEditingCliente(cliente)
+}
 
 const handleDelete = async (id) => {
     if (confirm('¿Está seguro de eliminar este cliente?')) {
         const success = await clienteStore.deleteCliente(id)
         if (success) {
             alert('Cliente eliminado exitosamente')
+            refreshList()
         } else {
             alert('Error al eliminar el cliente')
         }
@@ -61,6 +85,18 @@ const handleDelete = async (id) => {
 </script>
 
 <style scoped>
+.content-grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+.form-section {
+    position: sticky;
+    top: 2rem;
+}
+
 .clientes-view {
     padding: 2rem;
 }

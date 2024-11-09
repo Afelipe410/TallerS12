@@ -1,5 +1,5 @@
 <template>
-    <div class="cliente-form">
+    <div class="cliente-form card">
         <h3>{{ editMode ? 'Editar Cliente' : 'Nuevo Cliente' }}</h3>
         <form @submit.prevent="handleSubmit">
             <div class="form-group">
@@ -22,14 +22,20 @@
                 <input v-model="form.ciudad" type="text" required>
             </div>
 
-            <button type="submit">{{ editMode ? 'Actualizar' : 'Crear' }}</button>
-            <button type="button" @click="resetForm">Cancelar</button>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    {{ editMode ? 'Actualizar' : 'Crear' }}
+                </button>
+                <button type="button" class="btn btn-secondary" @click="resetForm">
+                    Cancelar
+                </button>
+            </div>
         </form>
     </div>
 </template>
 
 <script setup>
-import { ref, defineEmits } from 'vue'
+import { ref } from 'vue'
 import { useClienteStore } from '../../stores/cliente'
 
 const emit = defineEmits(['cliente-added'])
@@ -48,15 +54,23 @@ const editingId = ref(null)
 
 const handleSubmit = async () => {
     try {
+        let success
         if (editMode.value) {
-            await clienteStore.updateCliente(editingId.value, form.value)
+            success = await clienteStore.updateCliente(editingId.value, form.value)
         } else {
-            await clienteStore.createCliente(form.value)
+            success = await clienteStore.createCliente(form.value)
         }
-        emit('cliente-added')
-        resetForm()
+        
+        if (success) {
+            emit('cliente-added')
+            resetForm()
+            alert(editMode.value ? 'Cliente actualizado exitosamente' : 'Cliente creado exitosamente')
+        } else {
+            alert('Error al procesar la operación')
+        }
     } catch (error) {
         console.error('Error:', error)
+        alert('Error al procesar la solicitud')
     }
 }
 
@@ -77,39 +91,66 @@ defineExpose({ setEditingCliente })
 
 <style scoped>
 .cliente-form {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
 }
 
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
-label {
+.form-group label {
     display: block;
     margin-bottom: 0.5rem;
+    color: var(--secondary-color);
+    font-weight: var(--font-weight-medium);
 }
 
-input {
+.form-group input {
     width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
 }
 
-button {
-    margin-right: 1rem;
-    padding: 0.5rem 1rem;
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(66, 185, 131, 0.1);
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 4px;
-    background-color: #42b983;
-    color: white;
     cursor: pointer;
+    font-weight: var(--font-weight-medium);
+    transition: all 0.3s ease;
 }
 
-button[type="button"] {
-    background-color: #666;
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 </style>
