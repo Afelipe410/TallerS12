@@ -1,19 +1,148 @@
 <template>
-    <div class="mercancias">
-        <h2>Gestión de Mercancías</h2>
-        <MercanciaForm @mercancia-added="handleMercanciaAdded" />
-        <MercanciaList />
+    <div class="mercancias-view">
+        <h2>Lista de Mercancías</h2>
+        <div v-if="mercanciaStore.loading" class="loading">
+            Cargando...
+        </div>
+        <div v-else-if="mercanciaStore.error" class="error">
+            {{ mercanciaStore.error }}
+        </div>
+        <div v-else class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>ID</th>
+                        <th>Contenido</th>
+                        <th>Dimensiones (m)</th>
+                        <th>Ingreso</th>
+                        <th>Salida</th>
+                        <th>Bodega</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="mercancia in mercanciaStore.mercancias" :key="mercancia.id">
+                        <td>{{ mercancia.cliente || 'N/A' }}</td>
+                        <td>{{ mercancia.id || 'N/A' }}</td>
+                        <td>{{ mercancia.contenido || 'N/A' }}</td>
+                        <td>{{ `${mercancia.ancho}x${mercancia.alto}x${mercancia.largo}` }}</td>
+                        <td>{{ formatDate(mercancia.fechaHoraIngreso) }}</td>
+                        <td>{{ formatDate(mercancia.fechaHoraSalida) }}</td>
+                        <td>{{ mercancia.bodega || 'N/A' }}</td>
+                        <td>
+                            <button @click="handleDelete(mercancia.id)" class="btn btn-delete">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </template>
 
 <script setup>
-import MercanciaForm from '../components/mercancia/MercanciaForm.vue'
-import MercanciaList from '../components/mercancia/MercanciaList.vue'
+import { onMounted } from 'vue'
 import { useMercanciaStore } from '../stores/mercancia'
 
 const mercanciaStore = useMercanciaStore()
 
-const handleMercanciaAdded = () => {
+const formatDate = (dateString) => {
+    if (!dateString) return 'N/A'
+    return new Date(dateString).toLocaleString()
+}
+
+onMounted(() => {
     mercanciaStore.fetchMercancias()
+})
+
+const handleDelete = async (id) => {
+    if (confirm('¿Está seguro de eliminar esta mercancía?')) {
+        const success = await mercanciaStore.deleteMercancia(id)
+        if (success) {
+            alert('Mercancía eliminada exitosamente')
+        } else {
+            alert('Error al eliminar la mercancía')
+        }
+    }
 }
 </script>
+
+<style scoped>
+.mercancias-view {
+    padding: 2rem;
+}
+
+h2 {
+    color: var(--secondary-color);
+    margin-bottom: 2rem;
+    font-weight: var(--font-weight-semibold);
+}
+
+.table-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+th {
+    background-color: #f8f9fa;
+    font-weight: var(--font-weight-semibold);
+    color: var(--secondary-color);
+}
+
+tr:hover {
+    background-color: #f8f9fa;
+}
+
+.loading,
+.error {
+    text-align: center;
+    padding: 2rem;
+    color: var(--secondary-color);
+}
+
+.error {
+    color: #dc3545;
+}
+
+@media (max-width: 768px) {
+    .table-container {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 800px;
+    }
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+</style>

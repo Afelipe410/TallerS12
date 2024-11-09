@@ -15,46 +15,66 @@ export const useClienteStore = defineStore('cliente', {
             this.loading = true
             try {
                 const response = await axios.get(`${API_URL}/cliente`)
-                this.clientes = response.data
+                this.clientes = response.data.data
+                this.error = null
             } catch (error) {
-                this.error = error.message
+                this.error = 'Error al cargar los clientes'
+                console.error('Error:', error)
             } finally {
                 this.loading = false
             }
         },
 
-        async createCliente(cliente) {
-            try {
-                const response = await axios.post(`${API_URL}/cliente`, cliente)
-                this.clientes.push(response.data)
-                return response.data
-            } catch (error) {
-                this.error = error.message
-                throw error
-            }
-        },
-
-        async updateCliente(id, cliente) {
-            try {
-                const response = await axios.patch(`${API_URL}/cliente/${id}`, cliente)
-                const index = this.clientes.findIndex(c => c.id === id)
-                if (index !== -1) {
-                    this.clientes[index] = response.data
-                }
-                return response.data
-            } catch (error) {
-                this.error = error.message
-                throw error
-            }
-        },
-
         async deleteCliente(id) {
+            this.loading = true
             try {
-                await axios.delete(`${API_URL}/cliente/${id}`)
-                this.clientes = this.clientes.filter(c => c.id !== id)
+                const response = await axios.delete(`${API_URL}/cliente/${id}`)
+                if (response.data.message === 'ok') {
+                    await this.fetchClientes()
+                    return true
+                }
+                return false
             } catch (error) {
-                this.error = error.message
-                throw error
+                this.error = 'Error al eliminar el cliente'
+                console.error('Error:', error)
+                return false
+            } finally {
+                this.loading = false
+            }
+        },
+
+        async updateCliente(id, clienteData) {
+            this.loading = true
+            try {
+                const response = await axios.patch(`${API_URL}/cliente/${id}`, clienteData)
+                if (response.data.message === 'ok') {
+                    await this.fetchClientes()
+                    return true
+                }
+                return false
+            } catch (error) {
+                this.error = 'Error al actualizar el cliente'
+                console.error('Error:', error)
+                return false
+            } finally {
+                this.loading = false
+            }
+        },
+
+        async getClienteById(id) {
+            this.loading = true
+            try {
+                const response = await axios.get(`${API_URL}/cliente/id/${id}`)
+                if (response.data.message === 'ok') {
+                    return response.data.data
+                }
+                return null
+            } catch (error) {
+                this.error = 'Error al obtener el cliente'
+                console.error('Error:', error)
+                return null
+            } finally {
+                this.loading = false
             }
         }
     }
