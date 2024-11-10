@@ -66,15 +66,23 @@ const editingId = ref(null)
 
 const handleSubmit = async () => {
     try {
+        let success
         if (editMode.value) {
-            await mercanciaStore.updateMercancia(editingId.value, form.value)
+            success = await mercanciaStore.updateMercancia(editingId.value, form.value)
         } else {
-            await mercanciaStore.createMercancia(form.value)
+            success = await mercanciaStore.createMercancia(form.value)
         }
-        emit('mercancia-added')
-        resetForm()
+
+        if (success) {
+            emit('mercancia-added')
+            resetForm()
+            alert(editMode.value ? 'Mercancía actualizada exitosamente' : 'Mercancía creada exitosamente')
+        } else {
+            alert('Error al procesar la operación')
+        }
     } catch (error) {
         console.error('Error:', error)
+        alert('Error al procesar la solicitud')
     }
 }
 
@@ -102,13 +110,6 @@ defineExpose({ setEditingMercancia })
     margin-bottom: 2rem;
 }
 
-.mercancia-form h3 {
-    color: var(--secondary-color);
-    margin-bottom: 1.5rem;
-    font-weight: var(--font-weight-semibold);
-    font-size: 1.25rem;
-}
-
 .form-group {
     margin-bottom: 1.5rem;
 }
@@ -126,7 +127,6 @@ defineExpose({ setEditingMercancia })
     border: 1px solid var(--border-color);
     border-radius: 4px;
     font-size: 1rem;
-    font-family: var(--font-primary);
     transition: all 0.3s ease;
 }
 
@@ -146,8 +146,8 @@ defineExpose({ setEditingMercancia })
     padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 4px;
-    font-weight: var(--font-weight-medium);
     cursor: pointer;
+    font-weight: var(--font-weight-medium);
     transition: all 0.3s ease;
 }
 
@@ -156,50 +156,13 @@ defineExpose({ setEditingMercancia })
     color: white;
 }
 
-.btn-primary:hover {
-    background-color: #3aa876;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
 .btn-secondary {
     background-color: #6c757d;
     color: white;
 }
 
-.btn-secondary:hover {
-    background-color: #5a6268;
+.btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-@media (max-width: 768px) {
-    .mercancia-form {
-        padding: 1.5rem;
-    }
-
-    .form-actions {
-        flex-direction: column;
-    }
-
-    .btn {
-        width: 100%;
-    }
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.mercancia-form {
-    animation: slideDown 0.3s ease-out;
 }
 </style>

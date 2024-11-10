@@ -197,7 +197,6 @@ tr:hover {
     }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .cliente-list {
         padding: 1rem;

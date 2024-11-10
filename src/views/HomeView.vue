@@ -4,13 +4,13 @@
     <div class="features-grid">
       <div class="feature-card">
         <h2>Gestión de Clientes</h2>
-        <p>Administre fácilmente su base de clientes.</p>
+        <p>Crear, buscar, listar, actualizar y eliminar datos de clientes</p>
 
         <RouterLink to="/clientes" class="btn">Ir a Clientes</RouterLink>
       </div>
       <div class="feature-card">
-        <h2>Control de Mercancías</h2>
-        <p>Administre fácilmente su base de mercancias.</p>
+        <h2>Gestión de Mercancías</h2>
+        <p>Crear, buscar, listar, actualizar y eliminar datos de mercancias</p>
         <RouterLink to="/mercancias" class="btn">Ir a Mercancías</RouterLink>
       </div>
     </div>

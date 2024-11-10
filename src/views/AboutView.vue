@@ -1,27 +1,27 @@
 <template>
   <div class="acercade">
-    <h1>Acerca de Nuestro Sistema</h1>
+    <h1>Acerca de Mi Sistema</h1>
     <div class="about-content">
       <section class="about-section">
-        <h2>Nuestra Misión</h2>
-        <p>Proporcionar un sistema de gestión de envíos eficiente y confiable para nuestros clientes.</p>
+        <h2>Mi Misión</h2>
+        <p>Crear, buscar, listar, actualizar y eliminar datos de clientes y de mercancías.</p>
       </section>
 
       <section class="about-section">
         <h2>Características Principales</h2>
         <ul>
-          <li>Gestión integral de clientes</li>
-          <li>Control de mercancías en tiempo real</li>
-          <li>Seguimiento de envíos</li>
-          <li>Reportes detallados</li>
+          <li>Actualizar clientes</li>
+          <li>Actualizar mercancias</li>
+          <li>Eliminar clientes</li>
+          <li>Eliminar mercancias</li>
         </ul>
       </section>
 
       <section class="about-section">
         <h2>Contacto</h2>
-        <p>Para más información, contáctenos en:</p>
-        <p>Email: info@sistemaenvios.com</p>
-        <p>Teléfono: (123) 456-7890</p>
+        <p>Para mas información, contacteme en:</p>
+        <p>Email: andres.giraldo47424@ucaldas.edu.co</p>
+        <p>Teléfono: 314 722 1044</p>
       </section>
     </div>
   </div>

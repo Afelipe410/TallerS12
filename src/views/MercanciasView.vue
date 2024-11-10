@@ -1,67 +1,89 @@
 <template>
     <div class="mercancias-view">
-        <h2>Lista de Mercancías</h2>
-        <div v-if="mercanciaStore.loading" class="loading">
-            Cargando...
-        </div>
-        <div v-else-if="mercanciaStore.error" class="error">
-            {{ mercanciaStore.error }}
-        </div>
-        <div v-else class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Cliente</th>
-                        <th>ID</th>
-                        <th>Contenido</th>
-                        <th>Dimensiones (m)</th>
-                        <th>Ingreso</th>
-                        <th>Salida</th>
-                        <th>Bodega</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="mercancia in mercanciaStore.mercancias" :key="mercancia.id">
-                        <td>{{ mercancia.cliente || 'N/A' }}</td>
-                        <td>{{ mercancia.id || 'N/A' }}</td>
-                        <td>{{ mercancia.contenido || 'N/A' }}</td>
-                        <td>{{ `${mercancia.ancho}x${mercancia.alto}x${mercancia.largo}` }}</td>
-                        <td>{{ formatDate(mercancia.fechaHoraIngreso) }}</td>
-                        <td>{{ formatDate(mercancia.fechaHoraSalida) }}</td>
-                        <td>{{ mercancia.bodega || 'N/A' }}</td>
-                        <td>
-                            <button @click="handleDelete(mercancia.id)" class="btn btn-delete">
-                                <i class="fas fa-trash"></i> Eliminar
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="content-grid">
+            <div class="form-section">
+                <MercanciaForm ref="mercanciaForm" @mercancia-added="refreshList" />
+            </div>
+
+            <div class="table-section">
+                <h2>Lista de Mercancías</h2>
+                <div v-if="mercanciaStore.loading" class="loading">
+                    Cargando...
+                </div>
+                <div v-else-if="mercanciaStore.error" class="error">
+                    {{ mercanciaStore.error }}
+                </div>
+                <div v-else class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>ID</th>
+                                <th>Contenido</th>
+                                <th>Dimensiones (m)</th>
+                                <th>Ingreso</th>
+                                <th>Salida</th>
+                                <th>Bodega</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="mercancia in mercanciaStore.mercancias" :key="mercancia.id">
+                                <td>{{ mercancia.cliente || 'N/A' }}</td>
+                                <td>{{ mercancia.id || 'N/A' }}</td>
+                                <td>{{ mercancia.contenido || 'N/A' }}</td>
+                                <td>{{ `${mercancia.ancho}x${mercancia.alto}x${mercancia.largo}` }}</td>
+                                <td>{{ formatDate(mercancia.fechaHoraIngreso) }}</td>
+                                <td>{{ formatDate(mercancia.fechaHoraSalida) }}</td>
+                                <td>{{ mercancia.bodega || 'N/A' }}</td>
+                                <td class="actions">
+                                    <button @click="handleEdit(mercancia)" class="btn btn-edit">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button @click="handleDelete(mercancia.id)" class="btn btn-delete">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useMercanciaStore } from '../stores/mercancia'
+import MercanciaForm from '../components/mercancia/MercanciaForm.vue'
 
 const mercanciaStore = useMercanciaStore()
+const mercanciaForm = ref(null)
+
+onMounted(() => {
+    refreshList()
+})
 
 const formatDate = (dateString) => {
     if (!dateString) return 'N/A'
     return new Date(dateString).toLocaleString()
 }
 
-onMounted(() => {
+const refreshList = () => {
     mercanciaStore.fetchMercancias()
-})
+}
+
+const handleEdit = (mercancia) => {
+    mercanciaForm.value.setEditingMercancia(mercancia)
+}
 
 const handleDelete = async (id) => {
     if (confirm('¿Está seguro de eliminar esta mercancía?')) {
         const success = await mercanciaStore.deleteMercancia(id)
         if (success) {
             alert('Mercancía eliminada exitosamente')
+            refreshList()
         } else {
             alert('Error al eliminar la mercancía')
         }
@@ -70,8 +92,20 @@ const handleDelete = async (id) => {
 </script>
 
 <style scoped>
+.content-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 1rem;
+    align-items: start;
+}
+
+.form-section {
+    position: sticky;
+    top: 2rem;
+}
+
 .mercancias-view {
-    padding: 2rem;
+    padding: 1rem;
 }
 
 h2 {
@@ -120,16 +154,6 @@ tr:hover {
     color: #dc3545;
 }
 
-@media (max-width: 768px) {
-    .table-container {
-        overflow-x: auto;
-    }
-
-    table {
-        min-width: 800px;
-    }
-}
-
 .btn-delete {
     background-color: #dc3545;
     color: white;
@@ -142,6 +166,23 @@ tr:hover {
 
 .btn-delete:hover {
     background-color: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-edit {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 0.5rem;
+}
+
+.btn-edit:hover {
+    background-color: var(--primary-color-dark);
     transform: translateY(-2px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
