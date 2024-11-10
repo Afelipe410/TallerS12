@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1 class="welcome-title">Bienvenido al Sistema de Gestión de Envíos</h1>
+    <h1 class="welcome-title">Bienvenido al Sistema de Clientes y Mercancías</h1>
     <div class="features-grid">
       <div class="feature-card">
         <h2>Gestión de Clientes</h2>

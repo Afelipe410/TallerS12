@@ -7,7 +7,7 @@ import { RouterLink, RouterView } from 'vue-router'
     <header>
       <div class="logo-container">
         <img alt="Logo Envíos" class="logo" src="@/assets/logo.svg" width="50" height="50" />
-        <h1>Sistema de Envíos - Andrés Felipe Giraldo Rojas</h1>
+        <h1>Andrés Felipe Giraldo Rojas 47424</h1>
       </div>
 
       <nav>
@@ -23,7 +23,7 @@ import { RouterLink, RouterView } from 'vue-router'
     </main>
 
     <footer>
-      <p>&copy; 2024 Sistema de Gestión de Envíos</p>
+      <p>&copy; 2024 Sistema de Gestión de Clientes y Mercancías</p>
     </footer>
   </div>
 </template>
