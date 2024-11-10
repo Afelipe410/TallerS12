@@ -172,7 +172,7 @@ tr:hover {
 
 .btn-edit {
     background-color: var(--primary-color);
-    color: white;
+    color: rgb(255, 255, 255);
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 4px;
