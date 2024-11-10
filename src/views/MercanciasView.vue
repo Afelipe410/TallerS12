@@ -94,7 +94,7 @@ const handleDelete = async (id) => {
 <style scoped>
 .content-grid {
     display: grid;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 1fr 2fr;
     gap: 1rem;
     align-items: start;
 }
@@ -102,6 +102,7 @@ const handleDelete = async (id) => {
 .form-section {
     position: sticky;
     top: 2rem;
+    max-width: 400px;
 }
 
 .mercancias-view {

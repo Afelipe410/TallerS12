@@ -10,10 +10,12 @@
       <section class="about-section">
         <h2>Características Principales</h2>
         <ul>
-          <li>Actualizar clientes</li>
-          <li>Actualizar mercancias</li>
-          <li>Eliminar clientes</li>
-          <li>Eliminar mercancias</li>
+          <li>Crear cliente</li>
+          <li>Actualizar cliente</li>
+          <li>Eliminar cliente</li>
+          <li>Crear mercancia</li>
+          <li>Actualizar mercancia</li>
+          <li>Eliminar mercancia</li>
         </ul>
       </section>
 
