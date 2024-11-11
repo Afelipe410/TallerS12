@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, defineEmits } from 'vue'
 import { useClienteStore } from '../../stores/cliente'
 
 const emit = defineEmits(['cliente-added'])
@@ -60,7 +60,7 @@ const handleSubmit = async () => {
         } else {
             success = await clienteStore.createCliente(form.value)
         }
-        
+
         if (success) {
             emit('cliente-added')
             resetForm()

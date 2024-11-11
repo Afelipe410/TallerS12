@@ -76,6 +76,24 @@ export const useClienteStore = defineStore('cliente', {
             } finally {
                 this.loading = false
             }
+        },
+
+        async createCliente(clienteData) {
+            this.loading = true
+            try {
+                const response = await axios.post(`${API_URL}/cliente`, clienteData)
+                if (response.data.message === 'ok') {
+                    await this.fetchClientes()
+                    return true
+                }
+                return false
+            } catch (error) {
+                this.error = 'Error al crear el cliente'
+                console.error('Error:', error)
+                return false
+            } finally {
+                this.loading = false
+            }
         }
     }
 })
