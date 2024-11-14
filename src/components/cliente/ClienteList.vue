@@ -55,10 +55,6 @@ onMounted(() => {
     clienteStore.fetchClientes()
 })
 
-const editCliente = (cliente) => {
-    // Implementar lógica de edición
-}
-
 const deleteCliente = async (id) => {
     if (confirm('¿Está seguro de eliminar este cliente?')) {
         try {

@@ -55,10 +55,6 @@ onMounted(() => {
     mercanciaStore.fetchMercancias()
 })
 
-const editMercancia = (mercancia) => {
-    
-}
-
 const deleteMercancia = async (id) => {
     if (confirm('¿Está seguro de eliminar esta mercancía?')) {
         try {

@@ -25,7 +25,7 @@ export const useMercanciaStore = defineStore('mercancia', {
             }
         },
 
-        async addMercancia(mercanciaData) {
+        async createMercancia(mercanciaData) {
             this.loading = true
             try {
                 const response = await axios.post(`${API_URL}/mercancia`, mercanciaData)
@@ -36,24 +36,6 @@ export const useMercanciaStore = defineStore('mercancia', {
                 return false
             } catch (error) {
                 this.error = 'Error al agregar la mercancía: ' + error.message
-                console.error('Error:', error)
-                return false
-            } finally {
-                this.loading = false
-            }
-        },
-
-        async updateMercancia(id, mercanciaData) {
-            this.loading = true
-            try {
-                const response = await axios.patch(`${API_URL}/mercancia/${id}`, mercanciaData)
-                if (response.data.message === 'ok') {
-                    await this.fetchMercancias()
-                    return true
-                }
-                return false
-            } catch (error) {
-                this.error = 'Error al actualizar la mercancía: ' + error.message
                 console.error('Error:', error)
                 return false
             } finally {
@@ -78,23 +60,21 @@ export const useMercanciaStore = defineStore('mercancia', {
                 this.loading = false
             }
         },
+
         async updateMercancia(id, mercanciaData) {
-            this.loading = true
             try {
-                const response = await axios.patch(`${API_URL}/mercancia/${id}`, mercanciaData)
-                if (response.data.message === 'ok') {
-                    await this.fetchMercancias()
-                    return true
-                }
-                return false
+              const response = await axios.patch(`${API_URL}/mercancia/${id}`, mercanciaData);
+              if (response.data.message === 'ok') {
+                await this.fetchMercancias();
+                return true;
+              }
+              return false;
             } catch (error) {
-                this.error = 'Error al actualizar la mercancía'
-                console.error('Error:', error)
-                return false
-            } finally {
-                this.loading = false
+              this.error = `Error al actualizar la mercancía: ${error.message}`;
+              console.error('Error:', error);
+              return false;
             }
-        },
+          },
 
         async getMercanciaById(id) {
             this.loading = true
