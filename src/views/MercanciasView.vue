@@ -29,7 +29,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="mercancia in mercanciaStore.mercancias" :key="mercancia.id">
-                                <td>{{ mercancia.cliente || 'N/A' }}</td>
+                                <td>{{ mercancia.cliente.id || 'N/A' }}</td>
                                 <td>{{ mercancia.id || 'N/A' }}</td>
                                 <td>{{ mercancia.contenido || 'N/A' }}</td>
                                 <td>{{ `${mercancia.ancho}x${mercancia.alto}x${mercancia.largo}` }}</td>

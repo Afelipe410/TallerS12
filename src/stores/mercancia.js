@@ -63,18 +63,18 @@ export const useMercanciaStore = defineStore('mercancia', {
 
         async updateMercancia(id, mercanciaData) {
             try {
-              const response = await axios.patch(`${API_URL}/mercancia/${id}`, mercanciaData);
-              if (response.data.message === 'ok') {
-                await this.fetchMercancias();
-                return true;
-              }
-              return false;
+                const response = await axios.patch(`${API_URL}/mercancia/${id}`, mercanciaData);
+                if (response.data.message === 'ok') {
+                    await this.fetchMercancias();
+                    return true;
+                }
+                return false;
             } catch (error) {
-              this.error = `Error al actualizar la mercancía: ${error.message}`;
-              console.error('Error:', error);
-              return false;
+                this.error = `Error al actualizar la mercancía: ${error.message}`;
+                console.error('Error:', error);
+                return false;
             }
-          },
+        },
 
         async getMercanciaById(id) {
             this.loading = true
