@@ -6,7 +6,10 @@ import { RouterLink, RouterView } from 'vue-router'
   <div class="app-container">
     <header>
       <div class="logo-container">
-        <img alt="Logo Envíos" class="logo" src="@/assets/logo.svg" width="50" height="50" />
+        <a href="/">
+          <img alt="Logo Envíos" class="logo" src="@/assets/logo.svg" width="50" height="50" />
+        </a>
+
         <h1>Andrés Felipe Giraldo Rojas 47424</h1>
       </div>
 
