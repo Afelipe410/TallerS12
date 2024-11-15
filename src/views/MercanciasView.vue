@@ -155,35 +155,38 @@ tr:hover {
     color: #dc3545;
 }
 
-.btn-delete {
-    background-color: #dc3545;
-    color: white;
+.btn {
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 4px;
+    font-weight: var(--font-weight-medium);
     cursor: pointer;
     transition: all 0.3s ease;
-}
-
-.btn-delete:hover {
-    background-color: #c82333;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100px;
 }
 
 .btn-edit {
     background-color: var(--primary-color);
-    color: rgb(255, 255, 255);
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-right: 0.5rem;
+    color: white;
 }
 
 .btn-edit:hover {
-    background-color: var(--primary-color-dark);
+    background-color: #3aa876;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
     transform: translateY(-2px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
