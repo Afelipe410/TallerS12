@@ -9,17 +9,17 @@
 
             <div class="form-group">
                 <label>Ancho (m):</label>
-                <input v-model.number="form.ancho" type="number" step="0.1" required>
+                <input v-model.number="form.ancho" type="number" step="0.1" min="0" required>
             </div>
 
             <div class="form-group">
                 <label>Alto (m):</label>
-                <input v-model.number="form.alto" type="number" step="0.1" required>
+                <input v-model.number="form.alto" type="number" step="0.1" min="0" required>
             </div>
 
             <div class="form-group">
                 <label>Largo (m):</label>
-                <input v-model.number="form.largo" type="number" step="0.1" required>
+                <input v-model.number="form.largo" type="number" step="0.1" min="0" required>
             </div>
 
             <div class="form-group">
@@ -28,7 +28,17 @@
             </div>
 
             <div class="form-group">
-                <label>Cliente ID:</label>
+                <label>Fecha y Hora de Ingreso:</label>
+                <input v-model="form.fechaHoraIngreso" type="datetime-local" required>
+            </div>
+
+            <div class="form-group">
+                <label>Fecha y Hora de Salida:</label>
+                <input v-model="form.fechaHoraSalida" type="datetime-local" required>
+            </div>
+
+            <div class="form-group">
+                <label>Cliente:</label>
                 <input v-model="form.cliente" type="text" required>
             </div>
 
@@ -57,6 +67,8 @@ const initialForm = {
     alto: 0,
     largo: 0,
     bodega: '',
+    fechaHoraIngreso: '',
+    fechaHoraSalida: '',
     cliente: ''
 }
 
@@ -64,13 +76,30 @@ const form = ref({ ...initialForm })
 const editMode = ref(false)
 const editingId = ref(null)
 
+const formatDateForBackend = (dateString) => {
+    if (!dateString) return null
+
+    return dateString + ':00'
+}
+
 const handleSubmit = async () => {
     try {
+        const formData = {
+            ...form.value,
+            fechaHoraIngreso: formatDateForBackend(form.value.fechaHoraIngreso),
+            fechaHoraSalida: formatDateForBackend(form.value.fechaHoraSalida)
+        }
+
+        if (formData.ancho <= 0 || formData.alto <= 0 || formData.largo <= 0) {
+            alert('Las dimensiones deben ser números positivos')
+            return
+        }
+
         let success
         if (editMode.value) {
-            success = await mercanciaStore.updateMercancia(editingId.value, form.value)
+            success = await mercanciaStore.updateMercancia(editingId.value, formData)
         } else {
-            success = await mercanciaStore.createMercancia(form.value)
+            success = await mercanciaStore.createMercancia(formData)
         }
 
         if (success) {
@@ -82,7 +111,7 @@ const handleSubmit = async () => {
         }
     } catch (error) {
         console.error('Error:', error)
-        alert('Error al procesar la solicitud')
+        alert('Error al procesar la solicitud: ' + error.message)
     }
 }
 
@@ -92,8 +121,24 @@ const resetForm = () => {
     editingId.value = null
 }
 
+const formatDateForForm = (dateString) => {
+    if (!dateString) return ''
+
+    if (dateString.includes(' ')) {
+        const [datePart, timePart] = dateString.split(' ')
+        const timeWithoutSeconds = timePart.split(':').slice(0, 2).join(':')
+        return `${datePart}T${timeWithoutSeconds}`
+    }
+
+    return dateString.split(':').slice(0, 2).join(':')
+}
+
 const setEditingMercancia = (mercancia) => {
-    form.value = { ...mercancia }
+    form.value = {
+        ...mercancia,
+        fechaHoraIngreso: formatDateForForm(mercancia.fechaHoraIngreso),
+        fechaHoraSalida: formatDateForForm(mercancia.fechaHoraSalida)
+    }
     editMode.value = true
     editingId.value = mercancia.id
 }

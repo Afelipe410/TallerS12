@@ -25,6 +25,8 @@
                         <td>{{ mercancia.id }}</td>
                         <td>{{ mercancia.contenido }}</td>
                         <td>{{ mercancia.ancho }}x{{ mercancia.alto }}x{{ mercancia.largo }}</td>
+                        <td>{{ mercancia.fechaHoraIngreso }}</td>
+                        <td>{{ mercancia.fechaHoraSalida }}</td>
                         <td>{{ mercancia.bodega }}</td>
                         <td>{{ mercancia.cliente }}</td>
                         <td class="actions">
